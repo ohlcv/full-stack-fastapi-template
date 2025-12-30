@@ -1,12 +1,14 @@
+import uuid
 from typing import Any
 
-from sqlmodel import Session, select
+from sqlmodel import Session, select, func
 
 from app.core.security import get_password_hash, verify_password
 from app.models.user import User, UserCreate, UserUpdate
 
 
 def create_user(*, session: Session, user_create: UserCreate) -> User:
+    """Create a new user."""
     db_obj = User.model_validate(
         user_create, update={"hashed_password": get_password_hash(user_create.password)}
     )
@@ -16,7 +18,29 @@ def create_user(*, session: Session, user_create: UserCreate) -> User:
     return db_obj
 
 
-def update_user(*, session: Session, db_user: User, user_in: UserUpdate) -> Any:
+def get_user(*, session: Session, user_id: uuid.UUID) -> User | None:
+    """Get a user by ID."""
+    return session.get(User, user_id)
+
+
+def get_user_by_email(*, session: Session, email: str) -> User | None:
+    """Get a user by email."""
+    statement = select(User).where(User.email == email)
+    return session.exec(statement).first()
+
+
+def get_users(*, session: Session, skip: int = 0, limit: int = 100) -> tuple[list[User], int]:
+    """Get users with pagination."""
+    count_statement = select(func.count()).select_from(User)
+    count = session.exec(count_statement).one()
+    
+    statement = select(User).offset(skip).limit(limit)
+    users = session.exec(statement).all()
+    return list(users), count
+
+
+def update_user(*, session: Session, db_user: User, user_in: UserUpdate) -> User:
+    """Update a user."""
     user_data = user_in.model_dump(exclude_unset=True)
     extra_data = {}
     if "password" in user_data:
@@ -30,13 +54,23 @@ def update_user(*, session: Session, db_user: User, user_in: UserUpdate) -> Any:
     return db_user
 
 
-def get_user_by_email(*, session: Session, email: str) -> User | None:
-    statement = select(User).where(User.email == email)
-    session_user = session.exec(statement).first()
-    return session_user
+def update_user_password(*, session: Session, db_user: User, new_password: str) -> User:
+    """Update user password."""
+    db_user.hashed_password = get_password_hash(new_password)
+    session.add(db_user)
+    session.commit()
+    session.refresh(db_user)
+    return db_user
+
+
+def delete_user(*, session: Session, db_user: User) -> None:
+    """Delete a user."""
+    session.delete(db_user)
+    session.commit()
 
 
 def authenticate(*, session: Session, email: str, password: str) -> User | None:
+    """Authenticate a user by email and password."""
     db_user = get_user_by_email(session=session, email=email)
     if not db_user:
         return None
