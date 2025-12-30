@@ -1,7 +1,7 @@
 import uuid
 from typing import Any
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
 from app.api.deps import (
     CurrentUser,
@@ -109,8 +109,6 @@ def read_user_by_id(
     user = UserService.get_user_by_id(session=session, user_id=user_id)
     # Check access: user can see themselves, superuser can see anyone
     if not UserService.check_user_access(user=current_user, target_user_id=user_id):
-        from fastapi import HTTPException
-
         raise HTTPException(
             status_code=403,
             detail="The user doesn't have enough privileges",
