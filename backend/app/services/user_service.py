@@ -120,13 +120,17 @@ class UserService:
                     detail="User with this email already exists",
                 )
 
-        # Update user
-        user_data = user_in.model_dump(exclude_unset=True)
-        current_user.sqlmodel_update(user_data)
-        session.add(current_user)
-        session.commit()
-        session.refresh(current_user)
-        return current_user
+        # Convert UserUpdateMe to UserUpdate for CRUD layer
+        user_update = UserUpdate(
+            email=user_in.email,
+            full_name=user_in.full_name,
+        )
+        
+        # Use CRUD layer to update user
+        updated_user = crud.update_user(
+            session=session, db_user=current_user, user_in=user_update
+        )
+        return updated_user
 
     @staticmethod
     def update_password_me(
