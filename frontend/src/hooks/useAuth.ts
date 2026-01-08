@@ -2,8 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "@tanstack/react-router"
 
 import {
-  type Body_login_login_access_token as AccessToken,
-  LoginService,
+  AuthService,
   type UserPublic,
   type UserRegister,
   UsersService,
@@ -38,8 +37,8 @@ const useAuth = () => {
     },
   })
 
-  const login = async (data: AccessToken) => {
-    const response = await LoginService.loginAccessToken({
+  const login = async (data: { username: string; password: string }) => {
+    const response = await AuthService.authJwtLogin({
       formData: data,
     })
     localStorage.setItem("access_token", response.access_token)

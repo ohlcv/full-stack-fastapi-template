@@ -1,17 +1,15 @@
 from fastapi import APIRouter
 
-from app.api.routes import auth, files, items, login, private, users, utils
+from app.api.routes import auth, files, items, private, users, utils
 from app.core.config import settings
 
 api_router = APIRouter()
 
-# FastAPI Users routes (replaces login and some user routes)
+# FastAPI Users routes (authentication, registration, password reset, etc.)
 api_router.include_router(auth.router)
 
-# Keep existing routes for backward compatibility
-# Note: Some routes are replaced by fastapi-users, but we keep users.router for additional endpoints
-api_router.include_router(users.router)  # Additional user management endpoints
-# api_router.include_router(login.router)  # Deprecated: use /auth/login
+# User management routes (additional endpoints beyond fastapi-users)
+api_router.include_router(users.router)
 
 # Other routes
 api_router.include_router(utils.router)
