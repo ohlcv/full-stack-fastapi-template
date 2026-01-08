@@ -2,7 +2,8 @@ from sqlmodel import Session, create_engine, select
 
 from app import crud
 from app.core.config import settings
-from app.models import User, UserCreate
+from app.models import User
+from app.models.user import UserCreate
 
 engine = create_engine(str(settings.SQLALCHEMY_DATABASE_URI))
 
@@ -13,6 +14,7 @@ engine = create_engine(str(settings.SQLALCHEMY_DATABASE_URI))
 
 
 def init_db(session: Session) -> None:
+    """Initialize database with first superuser."""
     # Tables should be created with Alembic migrations
     # But if you don't want to use migrations, create
     # the tables un-commenting the next lines
@@ -25,9 +27,18 @@ def init_db(session: Session) -> None:
         select(User).where(User.email == settings.FIRST_SUPERUSER)
     ).first()
     if not user:
-        user_in = UserCreate(
+        # Create first superuser using fastapi-users compatible schema
+        from fastapi_users import schemas as fastapi_users_schemas
+        from app.core.security import get_password_hash
+        
+        # Create user directly (bypassing fastapi-users for initial setup)
+        user = User(
             email=settings.FIRST_SUPERUSER,
-            password=settings.FIRST_SUPERUSER_PASSWORD,
+            hashed_password=get_password_hash(settings.FIRST_SUPERUSER_PASSWORD),
             is_superuser=True,
+            is_active=True,
+            is_verified=True,  # Skip verification for initial superuser
         )
-        user = crud.create_user(session=session, user_create=user_in)
+        session.add(user)
+        session.commit()
+        session.refresh(user)
