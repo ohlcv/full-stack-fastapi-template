@@ -45,15 +45,15 @@ services:
       - traefik-public
       - default
 
-  db:
-    restart: "no"
-    ports:
-      - "5432:5432"
+  # db:
+  #   restart: "no"
+  #   ports:
+  #     - "5432:5432"
 
   adminer:
     restart: "no"
     ports:
-      - "8080:8080"
+      - "8081:8080"  # 改为 8081 避免与 EDB PEM (8080) 冲突
 
   backend:
     restart: "no"
@@ -61,25 +61,34 @@ services:
       - "8000:8000"
     build:
       context: ./backend
-    # command: sleep infinity  # Infinite loop to keep container alive doing nothing
+    # Use --reload flag for hot reloading on code changes
     command:
       - fastapi
       - run
       - --reload
+      - --host
+      - "0.0.0.0"
       - "app/main.py"
     develop:
       watch:
-        - path: ./backend
+        - path: ./backend/app
           action: sync
-          target: /app
+          target: /app/app
           ignore:
+            - ./backend/app/__pycache__
+            - ./backend/app/**/__pycache__
             - ./backend/.venv
             - .venv
         - path: ./backend/pyproject.toml
           action: rebuild
-    # TODO: remove once coverage is done locally
+    # Mount code directory for hot reloading
     volumes:
+      - ./backend/app:/app/app
+      - ./backend/tests:/app/tests
+      - ./backend/scripts:/app/scripts
       - ./backend/htmlcov:/app/htmlcov
+      # Exclude .venv to use container's virtual environment (using named volume)
+      - backend-venv:/app/.venv
     environment:
       SMTP_HOST: "mailcatcher"
       SMTP_PORT: "1025"
@@ -92,15 +101,15 @@ services:
       - "1080:1080"
       - "1025:1025"
 
-  frontend:
-    restart: "no"
-    ports:
-      - "5173:80"
-    build:
-      context: ./frontend
-      args:
-        - VITE_API_URL=http://localhost:8000
-        - NODE_ENV=development
+  # frontend:
+  #   restart: "no"
+  #   ports:
+  #     - "5173:80"
+  #   build:
+  #     context: ./frontend
+  #     args:
+  #       - VITE_API_URL=http://localhost:8000
+  #       - NODE_ENV=development
 
   playwright:
     build:
@@ -126,6 +135,10 @@ services:
       - ./frontend/test-results:/app/test-results
     ports:
       - 9323:9323
+
+volumes:
+  backend-venv:
+    # Named volume for backend virtual environment to avoid conflicts with local .venv
 
 networks:
   traefik-public:

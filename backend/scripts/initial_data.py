@@ -234,6 +234,15 @@ def ensure_migrations_and_upgrade() -> None:
     logger.info("检查 alembic_version 表状态")
     fix_alembic_version_if_needed()
     
+    # 先确保数据库已应用所有现有迁移（重要：必须在 autogenerate 之前）
+    # 如果数据库是空的，这会创建 alembic_version 表并应用所有迁移
+    logger.info("确保数据库已应用所有现有迁移")
+    try:
+        run_cmd(["alembic", "upgrade", "head"])
+    except Exception as e:
+        logger.warning(f"应用现有迁移时出错（可能数据库是空的）: {e}")
+        # 如果失败，可能是数据库完全为空，继续尝试 autogenerate
+    
     # 检查是否有新的模型变更
     logger.info("检查是否有新的模型变更")
     
@@ -277,13 +286,14 @@ def ensure_migrations_and_upgrade() -> None:
                     valid_migrations.append(migration_file)
                     logger.info(f"✅ 检测到模型变更，已生成新迁移: {migration_file.name}")
             
-            if not valid_migrations:
+            if valid_migrations:
+                # 如果有新的有效迁移，应用它们
+                logger.info("应用新生成的迁移")
+                run_cmd(["alembic", "upgrade", "head"])
+            else:
                 logger.info("未检测到模型变更")
         else:
             logger.info("未检测到模型变更")
-
-    # 升级到最新版本
-    run_cmd(["alembic", "upgrade", "head"])
 
 
 def init() -> None:
