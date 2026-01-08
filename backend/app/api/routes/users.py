@@ -99,7 +99,8 @@ def register_user(
     """
     Create new user without the need to be logged in.
     """
-    user_create = UserCreate.model_validate(user_in)
+    # Convert UserRegister to UserCreate using model_dump()
+    user_create = UserCreate.model_validate(user_in.model_dump())
     return UserService.register_user(session=session, user_in=user_create)
 
 
@@ -110,6 +111,7 @@ def read_user_by_id(
     """
     Get a specific user by id.
     """
+    # If we reach here, current_user dependency has passed (user is authenticated and active)
     user = UserService.get_user_by_id(session=session, user_id=user_id)
     # Check access: user can see themselves, superuser can see anyone
     if not UserService.check_user_access(user=current_user, target_user_id=user_id):

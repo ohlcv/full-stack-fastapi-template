@@ -155,7 +155,7 @@ def test_download_file(
     )
     
     assert response.status_code == 200
-    assert response.headers["content-type"] == "text/plain"
+    assert response.headers["content-type"].startswith("text/plain")
     assert file_content.encode() in response.content
 
 

@@ -42,7 +42,7 @@ def custom_generate_unique_id(route: APIRoute) -> str:
 async def lifespan(app: FastAPI):
     """Lifespan context manager for startup and shutdown events."""
     # Startup
-    await init_cache()
+    await init_cache()  # init_cache handles errors internally
     # Initialize i18n
     if settings.I18N_ENABLED:
         get_i18n()  # Initialize translations
@@ -78,6 +78,9 @@ if settings.RATE_LIMIT_ENABLED:
             if request.url.path.endswith("/health-check/") or request.url.path.endswith("/health-check"):
                 # Skip rate limiting for health check
                 return await call_next(request)
+            # Initialize view_rate_limit in request state for limiter decorators
+            if not hasattr(request.state, "view_rate_limit"):
+                request.state.view_rate_limit = None
             # Apply rate limiting for other endpoints
             return await super().dispatch(request, call_next)
     

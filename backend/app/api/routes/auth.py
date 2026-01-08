@@ -37,9 +37,7 @@ router.include_router(
     tags=["auth"],
 )
 
-# Include users management routes (get current user, update, delete)
-router.include_router(
-    fastapi_users.get_users_router(UserPublic, UserUpdate),
-    prefix="/users",
-    tags=["users"],
-)
+# Note: We don't include fastapi_users.get_users_router() here because:
+# 1. It requires superuser for GET/PATCH/DELETE /{id} routes by default
+# 2. We have our own users.router with custom access control logic
+# 3. Our users.router allows users to access their own profile

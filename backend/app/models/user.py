@@ -1,6 +1,7 @@
 import uuid
 from typing import TYPE_CHECKING
 
+from fastapi_users import schemas
 from pydantic import EmailStr
 from sqlmodel import Field, Relationship, SQLModel
 
@@ -21,14 +22,12 @@ class UserBase(SQLModel):
 
 
 # Properties to receive via API on creation
-class UserCreate(SQLModel):
+# Inherit from BaseUserCreate to get create_update_dict method
+class UserCreate(schemas.BaseUserCreate):
     """User creation schema compatible with fastapi-users."""
     email: EmailStr = Field(max_length=255)
     password: str = Field(min_length=8, max_length=128)
     full_name: str | None = Field(default=None, max_length=255)
-    is_active: bool = True
-    is_superuser: bool = False
-    is_verified: bool = False
 
 
 class UserRegister(SQLModel):
@@ -38,14 +37,12 @@ class UserRegister(SQLModel):
 
 
 # Properties to receive via API on update, all are optional
-class UserUpdate(SQLModel):
+# Inherit from BaseUserUpdate to get create_update_dict method
+class UserUpdate(schemas.BaseUserUpdate):
     """User update schema compatible with fastapi-users."""
     email: EmailStr | None = Field(default=None, max_length=255)  # type: ignore
     password: str | None = Field(default=None, min_length=8, max_length=128)
     full_name: str | None = Field(default=None, max_length=255)
-    is_active: bool | None = None
-    is_superuser: bool | None = None
-    is_verified: bool | None = None
 
 
 class UserUpdateMe(SQLModel):

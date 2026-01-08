@@ -2,12 +2,14 @@
 
 import uuid
 from collections.abc import AsyncGenerator
-from typing import Annotated
+from typing import Annotated, Optional
 
 from fastapi import Depends
+from fastapi.concurrency import run_in_threadpool
 from fastapi_users import BaseUserManager, FastAPIUsers
 from fastapi_users.authentication import AuthenticationBackend, BearerTransport, JWTStrategy
 from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
+from sqlalchemy import select
 from sqlalchemy.orm import Session as SQLAlchemySession
 from sqlalchemy.orm import sessionmaker
 
@@ -21,18 +23,77 @@ from fastapi_users import schemas
 
 # Database adapter
 # Note: fastapi-users expects async SQLAlchemy, but we use sync SQLModel
-# We'll create an adapter that works with sync sessions
-# SQLModel models are SQLAlchemy models, so this works
+# We'll create an adapter that wraps sync sessions to work with async fastapi-users
 SessionLocal = sessionmaker(bind=engine, class_=SQLAlchemySession)
 
 
-async def get_user_db() -> AsyncGenerator[SQLAlchemyUserDatabase, None]:
+class SyncSQLAlchemyUserDatabase(SQLAlchemyUserDatabase):
+    """Adapter for SQLAlchemyUserDatabase that works with sync SQLAlchemy sessions."""
+    
+    def __init__(self, session: SQLAlchemySession, user_table: type[User]):
+        """Initialize with sync SQLAlchemy session."""
+        # Store session and user table
+        self.session = session
+        self.user_table = user_table
+    
+    async def get(self, id: uuid.UUID) -> Optional[User]:
+        """Get user by ID (async wrapper for sync operation)."""
+        def _get_sync():
+            return self.session.get(self.user_table, id)
+        return await run_in_threadpool(_get_sync)
+    
+    async def get_by_email(self, email: str) -> Optional[User]:
+        """Get user by email (async wrapper for sync operation)."""
+        def _get_by_email_sync():
+            statement = select(self.user_table).where(self.user_table.email == email)
+            result = self.session.execute(statement)
+            return result.scalar_one_or_none()
+        return await run_in_threadpool(_get_by_email_sync)
+    
+    async def get_by_oauth_account(self, oauth: str, account_id: str) -> Optional[User]:
+        """Get user by OAuth account (not implemented for sync)."""
+        # OAuth not implemented yet
+        return None
+    
+    async def create(self, user: User | dict) -> User:
+        """Create user (async wrapper for sync operation)."""
+        def _create_sync():
+            # If user is a dict (from create_update_dict), convert to User instance
+            user_instance = user
+            if isinstance(user, dict):
+                user_instance = User(**user)
+            self.session.add(user_instance)
+            self.session.commit()
+            self.session.refresh(user_instance)
+            return user_instance
+        return await run_in_threadpool(_create_sync)
+    
+    async def update(self, user: User, update_dict: dict) -> User:
+        """Update user (async wrapper for sync operation)."""
+        def _update_sync():
+            # Update user attributes from update_dict
+            for key, value in update_dict.items():
+                setattr(user, key, value)
+            self.session.add(user)
+            self.session.commit()
+            self.session.refresh(user)
+            return user
+        return await run_in_threadpool(_update_sync)
+    
+    async def delete(self, user: User) -> None:
+        """Delete user (async wrapper for sync operation)."""
+        def _delete_sync():
+            self.session.delete(user)
+            self.session.commit()
+        await run_in_threadpool(_delete_sync)
+
+
+async def get_user_db() -> AsyncGenerator[SyncSQLAlchemyUserDatabase, None]:
     """Get user database adapter."""
     # Create sync SQLAlchemy session
-    # SQLModel models are SQLAlchemy models, so this works
     session = SessionLocal()
     try:
-        yield SQLAlchemyUserDatabase(session, User)
+        yield SyncSQLAlchemyUserDatabase(session, User)
     finally:
         session.close()
 
@@ -46,6 +107,10 @@ class UserManager(BaseUserManager[User, uuid.UUID]):
 
     reset_password_token_secret = settings.SECRET_KEY
     verification_token_secret = settings.SECRET_KEY
+    
+    def parse_id(self, value: str) -> uuid.UUID:
+        """Parse user ID from string."""
+        return uuid.UUID(value)
 
     async def on_after_register(
         self, user: User, request: None = None
@@ -86,7 +151,7 @@ class UserManager(BaseUserManager[User, uuid.UUID]):
 
 
 async def get_user_manager(
-    user_db: Annotated[SQLAlchemyUserDatabase, Depends(get_user_db)]
+    user_db: Annotated[SyncSQLAlchemyUserDatabase, Depends(get_user_db)]
 ) -> AsyncGenerator[UserManager, None]:
     """Get user manager."""
     yield UserManager(user_db)

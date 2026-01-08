@@ -35,12 +35,35 @@ def rate_limit_exceeded_handler(request: Request, exc: Exception) -> JSONRespons
 slowapi.extension._rate_limit_exceeded_handler = rate_limit_exceeded_handler
 
 # Initialize limiter
-limiter = Limiter(
-    key_func=get_remote_address,  # Use IP address as key
-    storage_uri=settings.RATE_LIMIT_STORAGE,
-    default_limits=[settings.RATE_LIMIT_DEFAULT],
-    headers_enabled=True,  # Add rate limit headers to response
-)
+# Use in-memory storage if storage_uri points to memory:// or if Redis fails
+storage_uri = settings.RATE_LIMIT_STORAGE
+if storage_uri and storage_uri.startswith("memory://"):
+    # Use in-memory storage (for tests)
+    limiter = Limiter(
+        key_func=get_remote_address,
+        storage_uri=storage_uri,
+        default_limits=[settings.RATE_LIMIT_DEFAULT],
+        headers_enabled=True,
+    )
+else:
+    # Try Redis, fallback to memory if it fails
+    # Note: slowapi may try to connect during initialization
+    try:
+        limiter = Limiter(
+            key_func=get_remote_address,
+            storage_uri=storage_uri,
+            default_limits=[settings.RATE_LIMIT_DEFAULT],
+            headers_enabled=True,
+            swallow_errors=True,  # Swallow connection errors
+        )
+    except Exception:
+        # Fallback to in-memory storage if Redis connection fails
+        limiter = Limiter(
+            key_func=get_remote_address,
+            storage_uri="memory://",
+            default_limits=[settings.RATE_LIMIT_DEFAULT],
+            headers_enabled=True,
+        )
 
 # Also patch slowapi.middleware's cached reference
 # slowapi.middleware imports _rate_limit_exceeded_handler at module level via:

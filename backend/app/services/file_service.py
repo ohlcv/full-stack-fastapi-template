@@ -44,7 +44,14 @@ class FileService:
             db_file = crud.create_file(
                 session=session, file_create=file_create, owner_id=current_user.id
             )
-            return db_file
+            return FilePublic(
+                id=db_file.id,
+                filename=db_file.filename,
+                original_filename=db_file.original_filename,
+                file_size=db_file.file_size,
+                content_type=db_file.content_type,
+                created_at=db_file.created_at,
+            )
             
         except ValueError as e:
             raise HTTPException(
@@ -68,7 +75,17 @@ class FileService:
             session=session, owner_id=owner_id, skip=skip, limit=limit
         )
         # Convert File models to FilePublic schemas
-        file_publics = [FilePublic.model_validate(file) for file in files]
+        file_publics = [
+            FilePublic(
+                id=file.id,
+                filename=file.filename,
+                original_filename=file.original_filename,
+                file_size=file.file_size,
+                content_type=file.content_type,
+                created_at=file.created_at,
+            )
+            for file in files
+        ]
         return FilesPublic(data=file_publics, count=count)
 
     @staticmethod
@@ -92,7 +109,14 @@ class FileService:
     def get_file_public(*, session: Session, file_id: uuid.UUID, current_user: User) -> FilePublic:
         """Get a file by ID with access control. Returns FilePublic schema for API responses."""
         db_file = FileService.get_file(session=session, file_id=file_id, current_user=current_user)
-        return FilePublic.model_validate(db_file)
+        return FilePublic(
+            id=db_file.id,
+            filename=db_file.filename,
+            original_filename=db_file.original_filename,
+            file_size=db_file.file_size,
+            content_type=db_file.content_type,
+            created_at=db_file.created_at,
+        )
 
     @staticmethod
     def delete_file(*, session: Session, file_id: uuid.UUID, current_user: User) -> dict[str, str]:

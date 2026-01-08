@@ -10,8 +10,18 @@ from tests.utils.utils import random_email, random_lower_string
 def user_authentication_headers(
     *, client: TestClient, email: str, password: str
 ) -> dict[str, str]:
+    """Get authentication headers using fastapi-users login endpoint."""
     data = {"username": email, "password": password}
 
+    # Try fastapi-users login endpoint first
+    r = client.post(f"{settings.API_V1_STR}/auth/login", data=data)
+    if r.status_code == 200:
+        response = r.json()
+        auth_token = response["access_token"]
+        headers = {"Authorization": f"Bearer {auth_token}"}
+        return headers
+    
+    # Fallback to legacy endpoint if available
     r = client.post(f"{settings.API_V1_STR}/login/access-token", data=data)
     response = r.json()
     auth_token = response["access_token"]

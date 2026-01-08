@@ -111,10 +111,18 @@ class UserService:
         *, session: Session, user_in: UserUpdateMe, current_user: User
     ) -> UserPublic:
         """Update current user's own profile."""
+        # Re-fetch user from current session to avoid session conflicts
+        # (current_user may be from a different session, e.g., fastapi-users)
+        db_user = crud.get_user(session=session, user_id=current_user.id)
+        if not db_user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+            )
+        
         # Check email uniqueness if email is being updated
         if user_in.email:
             existing_user = crud.get_user_by_email(session=session, email=user_in.email)
-            if existing_user and existing_user.id != current_user.id:
+            if existing_user and existing_user.id != db_user.id:
                 raise HTTPException(
                     status_code=status.HTTP_409_CONFLICT,
                     detail="User with this email already exists",
@@ -128,7 +136,7 @@ class UserService:
         
         # Use CRUD layer to update user
         updated_user = crud.update_user(
-            session=session, db_user=current_user, user_in=user_update
+            session=session, db_user=db_user, user_in=user_update
         )
         return updated_user
 
@@ -137,8 +145,15 @@ class UserService:
         *, session: Session, current_password: str, new_password: str, current_user: User
     ) -> dict[str, str]:
         """Update current user's password."""
+        # Re-fetch user from current session to avoid session conflicts
+        db_user = crud.get_user(session=session, user_id=current_user.id)
+        if not db_user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+            )
+        
         # Verify current password
-        if not verify_password(current_password, current_user.hashed_password):
+        if not verify_password(current_password, db_user.hashed_password):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST, detail="Incorrect password"
             )
@@ -152,7 +167,7 @@ class UserService:
 
         # Update password
         crud.update_user_password(
-            session=session, db_user=current_user, new_password=new_password
+            session=session, db_user=db_user, new_password=new_password
         )
         return {"message": "Password updated successfully"}
 
@@ -183,11 +198,37 @@ class UserService:
                 detail="Super users are not allowed to delete themselves",
             )
 
-        crud.delete_user(session=session, db_user=current_user)
+        # Re-fetch user from current session to avoid session conflicts
+        # (current_user may be from a different session, e.g., fastapi-users)
+        db_user = crud.get_user(session=session, user_id=current_user.id)
+        if not db_user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+            )
+
+        crud.delete_user(session=session, db_user=db_user)
         return {"message": "User deleted successfully"}
 
     @staticmethod
     def check_user_access(*, user: User, target_user_id: uuid.UUID) -> bool:
         """Check if user has access to view/modify another user."""
-        return user.is_superuser or user.id == target_user_id
+        # Superuser can access anyone
+        if user.is_superuser:
+            return True
+        # User can access their own profile
+        # Get user ID and ensure it's a UUID
+        user_id = user.id
+        
+        # Convert both to UUID for comparison, with fallback to string comparison
+        try:
+            # Ensure both are UUID objects
+            if not isinstance(user_id, uuid.UUID):
+                user_id = uuid.UUID(str(user_id))
+            if not isinstance(target_user_id, uuid.UUID):
+                target_user_id = uuid.UUID(str(target_user_id))
+            # Compare UUIDs
+            return user_id == target_user_id
+        except (ValueError, TypeError, AttributeError):
+            # Fallback to string comparison if UUID conversion fails
+            return str(user_id) == str(target_user_id)
 
