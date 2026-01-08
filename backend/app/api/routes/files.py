@@ -18,9 +18,9 @@ router = APIRouter(prefix="/files", tags=["files"])
 @limiter.limit("10/minute")
 async def upload_file(
     request: Request,
+    session: SessionDep,
+    current_user: CurrentUser,
     file: UploadFile = FastAPIFile(...),
-    session: SessionDep = Depends(),
-    current_user: CurrentUser = Depends(),
 ) -> Any:
     """Upload a file."""
     return await FileService.upload_file(

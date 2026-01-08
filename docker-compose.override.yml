@@ -66,12 +66,13 @@ services:
         condition: service_healthy
     # Use --reload flag for hot reloading on code changes
     command:
-      - fastapi
-      - run
-      - --reload
+      - uvicorn
+      - app.main:app
       - --host
       - "0.0.0.0"
-      - "app/main.py"
+      - --port
+      - "8000"
+      - --reload
     develop:
       watch:
         - path: ./backend/app
@@ -135,7 +136,8 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
     volumes:
       - ./backend/app:/app/app
-      - backend-venv:/app/.venv
+      # Use container's virtual environment (no volume mount)
+      # - backend-venv:/app/.venv
 
   mailcatcher:
     image: schickling/mailcatcher

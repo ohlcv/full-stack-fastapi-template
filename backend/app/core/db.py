@@ -1,9 +1,7 @@
 from sqlmodel import Session, create_engine, select
 
-from app import crud
 from app.core.config import settings
 from app.models import User
-from app.models.user import UserCreate
 
 engine = create_engine(str(settings.SQLALCHEMY_DATABASE_URI))
 
@@ -28,7 +26,6 @@ def init_db(session: Session) -> None:
     ).first()
     if not user:
         # Create first superuser using fastapi-users compatible schema
-        from fastapi_users import schemas as fastapi_users_schemas
         from app.core.security import get_password_hash
         
         # Create user directly (bypassing fastapi-users for initial setup)

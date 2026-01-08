@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = 'add_is_verified'
-down_revision = 'e2412789c190'  # Update this to match your latest migration
+down_revision = '1a31ce608336'  # Based on cascade delete relationships migration
 branch_labels = None
 depends_on = None
 

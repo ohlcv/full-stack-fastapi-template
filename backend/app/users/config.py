@@ -7,7 +7,7 @@ from typing import Annotated
 from fastapi import Depends
 from fastapi_users import BaseUserManager, FastAPIUsers
 from fastapi_users.authentication import AuthenticationBackend, BearerTransport, JWTStrategy
-from fastapi_users.db import SQLAlchemyUserDatabase
+from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
 from sqlalchemy.orm import Session as SQLAlchemySession
 from sqlalchemy.orm import sessionmaker
 
@@ -38,12 +38,10 @@ async def get_user_db() -> AsyncGenerator[SQLAlchemyUserDatabase, None]:
 
 
 # User manager
-# BaseUserManager[ID, UCD, UPD, UDB]
-# ID: user ID type (uuid.UUID)
-# UCD: UserCreate schema
-# UPD: UserUpdate schema
+# BaseUserManager[UDB, ID]
 # UDB: User database model
-class UserManager(BaseUserManager[uuid.UUID, schemas.UserCreate, schemas.UserUpdate, User]):
+# ID: user ID type (uuid.UUID)
+class UserManager(BaseUserManager[User, uuid.UUID]):
     """Custom user manager with email sending."""
 
     reset_password_token_secret = settings.SECRET_KEY

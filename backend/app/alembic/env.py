@@ -19,7 +19,15 @@ fileConfig(config.config_file_name)
 # target_metadata = None
 
 from sqlmodel import SQLModel  # noqa
-from app.core.config import settings # noqa
+from app.core.config import settings  # noqa
+
+# Import all models so they are registered with SQLModel.metadata
+# This is required for Alembic autogenerate to work correctly
+from app.models import (  # noqa
+    File,
+    Item,
+    User,
+)
 
 target_metadata = SQLModel.metadata
 

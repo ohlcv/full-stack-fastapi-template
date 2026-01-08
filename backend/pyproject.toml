@@ -25,6 +25,7 @@ dependencies = [
     "sqladmin<1.0.0,>=0.19.0",
     "fastapi-permissions<0.3.0,>=0.2.0",
     "fastapi-users<13.0.0,>=12.0.0",
+    "fastapi-users-db-sqlalchemy<8.0.0,>=7.0.0",
     "httpx-oauth<1.0.0,>=0.12.0",
     "fastapi-cache2<1.0.0,>=0.2.0",
     "arq<1.0.0,>=0.25.0",
@@ -32,6 +33,7 @@ dependencies = [
     "slowapi<1.0.0,>=0.1.9",
     "babel<3.0.0,>=2.14.0",
     "aiofiles<24.0.0,>=23.2.1",
+    "itsdangerous<3.0.0,>=2.1.0",
 ]
 
 [tool.uv]

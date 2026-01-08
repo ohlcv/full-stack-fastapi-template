@@ -70,8 +70,10 @@ dependencies = [
     { name = "fastapi-cache2" },
     { name = "fastapi-permissions" },
     { name = "fastapi-users" },
+    { name = "fastapi-users-db-sqlalchemy" },
     { name = "httpx" },
     { name = "httpx-oauth" },
+    { name = "itsdangerous" },
     { name = "jinja2" },
     { name = "passlib", extra = ["bcrypt"] },
     { name = "psycopg", extra = ["binary"] },
@@ -111,8 +113,10 @@ requires-dist = [
     { name = "fastapi-cache2", specifier = ">=0.2.0,<1.0.0" },
     { name = "fastapi-permissions", specifier = ">=0.2.0,<0.3.0" },
     { name = "fastapi-users", specifier = ">=12.0.0,<13.0.0" },
+    { name = "fastapi-users-db-sqlalchemy", specifier = ">=7.0.0,<8.0.0" },
     { name = "httpx", specifier = ">=0.25.1,<1.0.0" },
     { name = "httpx-oauth", specifier = ">=0.12.0,<1.0.0" },
+    { name = "itsdangerous", specifier = ">=2.1.0,<3.0.0" },
     { name = "jinja2", specifier = ">=3.1.4,<4.0.0" },
     { name = "passlib", extras = ["bcrypt"], specifier = ">=1.7.4,<2.0.0" },
     { name = "psycopg", extras = ["binary"], specifier = ">=3.1.13,<4.0.0" },
@@ -723,6 +727,19 @@ wheels = [
 ]
 
 [[package]]
+name = "fastapi-users-db-sqlalchemy"
+version = "7.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "fastapi-users" },
+    { name = "sqlalchemy", extra = ["asyncio"] },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/87/12/bc9e6146ae31564741cefc87ee6e37fa5b566933f0afe8aa030779d60e60/fastapi_users_db_sqlalchemy-7.0.0.tar.gz", hash = "sha256:6823eeedf8a92f819276a2b2210ef1dcfd71fe8b6e37f7b4da8d1c60e3dfd595", size = 10877, upload-time = "2025-01-04T13:09:05.086Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a6/08/9968963c1fb8c34627b7f1fbcdfe9438540f87dc7c9bfb59bb4fd19a4ecf/fastapi_users_db_sqlalchemy-7.0.0-py3-none-any.whl", hash = "sha256:5fceac018e7cfa69efc70834dd3035b3de7988eb4274154a0dbe8b14f5aa001e", size = 6891, upload-time = "2025-01-04T13:09:02.869Z" },
+]
+
+[[package]]
 name = "filelock"
 version = "3.16.1"
 source = { registry = "https://pypi.org/simple" }
@@ -971,6 +988,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/d7/4b/cbd8e699e64a6f16ca3a8220661b5f83792b3017d0f79807cb8708d33913/iniconfig-2.0.0.tar.gz", hash = "sha256:2d91e135bf72d31a410b17c16da610a82cb55f6b0477d1a902134b24a455b8b3", size = 4646, upload-time = "2023-01-07T11:08:11.254Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ef/a6/62565a6e1cf69e10f5727360368e451d4b7f58beeac6173dc9db836a5b46/iniconfig-2.0.0-py3-none-any.whl", hash = "sha256:b6a85871a79d2e3b22d2d1b94ac2824226a63c6b741c88f7ae975f18b6778374", size = 5892, upload-time = "2023-01-07T11:08:09.864Z" },
+]
+
+[[package]]
+name = "itsdangerous"
+version = "2.2.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/9c/cb/8ac0172223afbccb63986cc25049b154ecfb5e85932587206f42317be31d/itsdangerous-2.2.0.tar.gz", hash = "sha256:e0050c0b7da1eea53ffaf149c0cfbb5c6e2e2b69c4bef22c81fa6eb73e5f6173", size = 54410, upload-time = "2024-04-16T21:28:15.614Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/04/96/92447566d16df59b2a776c0fb82dbc4d9e07cd95062562af01e408583fc4/itsdangerous-2.2.0-py3-none-any.whl", hash = "sha256:c6242fc49e35958c8b15141343aa660db5fc54d4f13a1db01a3f5891b98700ef", size = 16234, upload-time = "2024-04-16T21:28:14.499Z" },
 ]
 
 [[package]]
@@ -1875,6 +1901,11 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/f0/f3/ee1e62fabdc10910b5ef720ae08e59bc785f26652876af3a50b89b97b412/SQLAlchemy-2.0.35-cp312-cp312-win32.whl", hash = "sha256:0f9f3f9a3763b9c4deb8c5d09c4cc52ffe49f9876af41cc1b2ad0138878453cf", size = 2060113, upload-time = "2024-09-16T20:54:15.16Z" },
     { url = "https://files.pythonhosted.org/packages/60/63/a3cef44a52979169d884f3583d0640e64b3c28122c096474a1d7cfcaf1f3/SQLAlchemy-2.0.35-cp312-cp312-win_amd64.whl", hash = "sha256:25b0f63e7fcc2a6290cb5f7f5b4fc4047843504983a28856ce9b35d8f7de03cc", size = 2085839, upload-time = "2024-09-16T20:54:17.11Z" },
     { url = "https://files.pythonhosted.org/packages/0e/c6/33c706449cdd92b1b6d756b247761e27d32230fd6b2de5f44c4c3e5632b2/SQLAlchemy-2.0.35-py3-none-any.whl", hash = "sha256:2ab3f0336c0387662ce6221ad30ab3a5e6499aab01b9790879b6578fd9b8faa1", size = 1881276, upload-time = "2024-09-16T23:14:28.324Z" },
+]
+
+[package.optional-dependencies]
+asyncio = [
+    { name = "greenlet" },
 ]
 
 [[package]]

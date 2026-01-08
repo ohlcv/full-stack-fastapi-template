@@ -20,6 +20,18 @@ def run_cmd(cmd: list[str]) -> subprocess.CompletedProcess:
     return subprocess.run(cmd, check=True, capture_output=True, text=True)
 
 
+def contains_drop_table_operations(file_path: Path) -> bool:
+    """检查迁移文件是否包含删除表的操作（通常是错误的检测）"""
+    try:
+        content = file_path.read_text(encoding="utf-8")
+        # 检查是否包含 drop_table 操作
+        # 如果包含 drop_table，可能是 Alembic 错误地检测到表被删除
+        return "op.drop_table" in content
+    except Exception as e:
+        logger.warning(f"检查迁移文件时出错: {e}")
+        return False
+
+
 def is_empty_migration(file_path: Path) -> bool:
     """检查迁移文件是否为空（只有 pass）"""
     try:
@@ -238,10 +250,31 @@ def ensure_migrations_and_upgrade() -> None:
     # 如果数据库是空的，这会创建 alembic_version 表并应用所有迁移
     logger.info("确保数据库已应用所有现有迁移")
     try:
-        run_cmd(["alembic", "upgrade", "head"])
+        result = subprocess.run(
+            ["alembic", "upgrade", "head"],
+            capture_output=True,
+            text=True,
+            check=False
+        )
+        if result.returncode == 0:
+            logger.info("✅ 数据库迁移已成功应用")
+        else:
+            logger.error(f"❌ 数据库迁移失败 (退出码: {result.returncode})")
+            if result.stdout:
+                logger.error(f"stdout: {result.stdout}")
+            if result.stderr:
+                logger.error(f"stderr: {result.stderr}")
+            raise subprocess.CalledProcessError(
+                result.returncode, ["alembic", "upgrade", "head"],
+                output=result.stdout, stderr=result.stderr
+            )
+    except subprocess.CalledProcessError as e:
+        logger.error(f"应用现有迁移时出错: {e}")
+        logger.error("无法继续：数据库迁移失败，表可能不存在")
+        raise
     except Exception as e:
-        logger.warning(f"应用现有迁移时出错（可能数据库是空的）: {e}")
-        # 如果失败，可能是数据库完全为空，继续尝试 autogenerate
+        logger.error(f"应用现有迁移时出错: {e}")
+        raise
     
     # 检查是否有新的模型变更
     logger.info("检查是否有新的模型变更")
@@ -276,12 +309,16 @@ def ensure_migrations_and_upgrade() -> None:
         new_files = files_after - files_before
         
         if new_files:
-            # 检查新生成的迁移文件是否为空，如果为空则删除
+            # 检查新生成的迁移文件是否为空或包含错误的删除操作
             valid_migrations = []
             for migration_file in new_files:
                 if is_empty_migration(migration_file):
                     logger.info(f"⚠️  检测到空迁移文件（无模型变更），已删除: {migration_file.name}")
                     migration_file.unlink()  # 删除空迁移文件
+                elif contains_drop_table_operations(migration_file):
+                    logger.warning(f"⚠️  检测到删除表的迁移（可能是错误的检测），已删除: {migration_file.name}")
+                    logger.warning("   这通常是因为模型未正确导入到 Alembic env.py 中")
+                    migration_file.unlink()  # 删除错误的迁移文件
                 else:
                     valid_migrations.append(migration_file)
                     logger.info(f"✅ 检测到模型变更，已生成新迁移: {migration_file.name}")

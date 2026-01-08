@@ -1,7 +1,7 @@
 """File-related models."""
 
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import TYPE_CHECKING
 
 from pydantic import BaseModel
@@ -25,7 +25,7 @@ class FileBase(SQLModel):
 class File(FileBase, table=True):
     """File database model."""
     id: uuid.UUID = SQLField(default_factory=uuid.uuid4, primary_key=True)
-    created_at: datetime = SQLField(default_factory=datetime.utcnow)
+    created_at: datetime = SQLField(default_factory=lambda: datetime.now(timezone.utc))
     
     owner: "User" = Relationship(back_populates="files")
 

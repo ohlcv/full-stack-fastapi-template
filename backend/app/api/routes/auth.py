@@ -1,7 +1,9 @@
 """Authentication routes using fastapi-users."""
 
 from fastapi import APIRouter
+from fastapi_users import schemas
 
+from app.models.user import User, UserCreate, UserPublic, UserUpdate
 from app.users import fastapi_users
 from app.users.config import auth_backend
 
@@ -16,7 +18,7 @@ router.include_router(
 
 # Include registration route
 router.include_router(
-    fastapi_users.get_register_router(),
+    fastapi_users.get_register_router(UserPublic, UserCreate),
     prefix="/auth",
     tags=["auth"],
 )
@@ -30,14 +32,14 @@ router.include_router(
 
 # Include verification route (email verification)
 router.include_router(
-    fastapi_users.get_verify_router(),
+    fastapi_users.get_verify_router(UserPublic),
     prefix="/auth",
     tags=["auth"],
 )
 
 # Include users management routes (get current user, update, delete)
 router.include_router(
-    fastapi_users.get_users_router(),
+    fastapi_users.get_users_router(UserPublic, UserUpdate),
     prefix="/users",
     tags=["users"],
 )

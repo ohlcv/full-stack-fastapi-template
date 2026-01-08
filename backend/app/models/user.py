@@ -1,7 +1,6 @@
 import uuid
 from typing import TYPE_CHECKING
 
-from fastapi_users.db import SQLAlchemyBaseUserTableUUID
 from pydantic import EmailStr
 from sqlmodel import Field, Relationship, SQLModel
 
@@ -11,9 +10,13 @@ if TYPE_CHECKING:
 
 
 # Shared properties
-# Note: email, is_active, is_superuser, is_verified are inherited from SQLAlchemyBaseUserTableUUID
 class UserBase(SQLModel):
-    """Base user properties (excluding fields from SQLAlchemyBaseUserTableUUID)."""
+    """Base user properties."""
+    email: EmailStr = Field(max_length=320, unique=True, index=True)
+    hashed_password: str = Field(max_length=1024)
+    is_active: bool = Field(default=True)
+    is_superuser: bool = Field(default=False)
+    is_verified: bool = Field(default=False)
     full_name: str | None = Field(default=None, max_length=255)
 
 
@@ -56,13 +59,10 @@ class UpdatePassword(SQLModel):
 
 
 # Database model, database table inferred from class name
-# Inherit from SQLAlchemyBaseUserTableUUID for fastapi-users compatibility
-class User(SQLAlchemyBaseUserTableUUID, UserBase, table=True):
+# Compatible with fastapi-users: includes all required fields (id, email, hashed_password, is_active, is_superuser, is_verified)
+class User(UserBase, table=True):
     """User model compatible with fastapi-users."""
-    # id, email, hashed_password, is_active, is_superuser, is_verified 
-    # are inherited from SQLAlchemyBaseUserTableUUID
-    
-    full_name: str | None = Field(default=None, max_length=255)
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     items: list["Item"] = Relationship(back_populates="owner", cascade_delete=True)
     files: list["File"] = Relationship(back_populates="owner", cascade_delete=True)
 

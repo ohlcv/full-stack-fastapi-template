@@ -14,11 +14,11 @@ class UserAdmin(ModelView, model=User):
     column_list = [User.id, User.email, User.full_name, User.is_active, User.is_superuser]
     column_searchable_list = [User.email, User.full_name]
     column_filters = [User.is_active, User.is_superuser]
-    column_sortable_list = [User.email, User.is_active, User.created_at] if hasattr(User, "created_at") else [User.email, User.is_active]
+    column_sortable_list = [User.email, User.is_active]
     
-    # Exclude sensitive fields
+    # Exclude sensitive fields from forms
     form_excluded_columns = ["hashed_password", "items", "files"]
-    column_exclude_list = ["hashed_password"]
+    # Note: hashed_password is already excluded because it's not in column_list
     
     # Permissions
     can_create = True
@@ -61,8 +61,7 @@ class FileAdmin(ModelView, model=File):
     column_filters = [File.owner_id, File.content_type]
     column_sortable_list = [File.created_at, File.file_size]
     
-    # Exclude sensitive fields
-    column_exclude_list = ["file_hash", "file_path"]
+    # Note: file_hash and file_path are already excluded because they're not in column_list
     
     # Permissions
     can_create = False  # Files should be uploaded via API
