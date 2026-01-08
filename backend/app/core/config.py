@@ -137,6 +137,12 @@ class Settings(BaseSettings):
     RATE_LIMIT_REGISTER: str = "3/minute"  # Register: 3 requests per minute
     RATE_LIMIT_PASSWORD_RESET: str = "3/hour"  # Password reset: 3 requests per hour
 
+    # Internationalization (i18n) configuration
+    I18N_ENABLED: bool = True
+    I18N_DEFAULT_LOCALE: str = "zh_CN"  # Default locale: Chinese (Simplified)
+    I18N_SUPPORTED_LOCALES: list[str] = ["zh_CN", "en_US"]  # Supported locales
+    I18N_LOCALE_DIR: str = "app/locales"  # Translation files directory
+
     def _check_default_secret(self, var_name: str, value: str | None) -> None:
         if value == "changethis":
             message = (

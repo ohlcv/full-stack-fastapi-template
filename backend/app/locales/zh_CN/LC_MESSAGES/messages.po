@@ -1,0 +1,64 @@
+# Chinese (Simplified) translations
+msgid ""
+msgstr ""
+"Language: zh_CN\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"MIME-Version: 1.0\n"
+
+# Error messages
+msgid "User not found"
+msgstr "用户不存在"
+
+msgid "Incorrect email or password"
+msgstr "邮箱或密码错误"
+
+msgid "Inactive user"
+msgstr "用户未激活"
+
+msgid "The user with this email already exists in the system."
+msgstr "该邮箱已被注册"
+
+msgid "Password updated successfully"
+msgstr "密码更新成功"
+
+msgid "Incorrect password"
+msgstr "密码错误"
+
+msgid "New password cannot be the same as the current one"
+msgstr "新密码不能与当前密码相同"
+
+msgid "User deleted successfully"
+msgstr "用户删除成功"
+
+msgid "Super users are not allowed to delete themselves"
+msgstr "超级用户不能删除自己"
+
+msgid "The user doesn't have enough privileges"
+msgstr "用户权限不足"
+
+msgid "Item not found"
+msgstr "项目不存在"
+
+msgid "Not enough permissions"
+msgstr "权限不足"
+
+msgid "Item deleted successfully"
+msgstr "项目删除成功"
+
+msgid "Password recovery email sent"
+msgstr "密码重置邮件已发送"
+
+msgid "Invalid token"
+msgstr "无效的令牌"
+
+msgid "Rate limit exceeded"
+msgstr "请求过于频繁，请稍后再试"
+
+msgid "Validation error"
+msgstr "验证错误"
+
+msgid "Database integrity error"
+msgstr "数据库完整性错误"
+
+msgid "Internal server error"
+msgstr "服务器内部错误"

@@ -1,0 +1,64 @@
+# English (US) translations
+msgid ""
+msgstr ""
+"Language: en_US\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"MIME-Version: 1.0\n"
+
+# Error messages
+msgid "User not found"
+msgstr "User not found"
+
+msgid "Incorrect email or password"
+msgstr "Incorrect email or password"
+
+msgid "Inactive user"
+msgstr "Inactive user"
+
+msgid "The user with this email already exists in the system."
+msgstr "The user with this email already exists in the system."
+
+msgid "Password updated successfully"
+msgstr "Password updated successfully"
+
+msgid "Incorrect password"
+msgstr "Incorrect password"
+
+msgid "New password cannot be the same as the current one"
+msgstr "New password cannot be the same as the current one"
+
+msgid "User deleted successfully"
+msgstr "User deleted successfully"
+
+msgid "Super users are not allowed to delete themselves"
+msgstr "Super users are not allowed to delete themselves"
+
+msgid "The user doesn't have enough privileges"
+msgstr "The user doesn't have enough privileges"
+
+msgid "Item not found"
+msgstr "Item not found"
+
+msgid "Not enough permissions"
+msgstr "Not enough permissions"
+
+msgid "Item deleted successfully"
+msgstr "Item deleted successfully"
+
+msgid "Password recovery email sent"
+msgstr "Password recovery email sent"
+
+msgid "Invalid token"
+msgstr "Invalid token"
+
+msgid "Rate limit exceeded"
+msgstr "Rate limit exceeded"
+
+msgid "Validation error"
+msgstr "Validation error"
+
+msgid "Database integrity error"
+msgstr "Database integrity error"
+
+msgid "Internal server error"
+msgstr "Internal server error"

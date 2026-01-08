@@ -23,7 +23,7 @@ def login_access_token(
     OAuth2 compatible token login, get an access token for future requests
     """
     return AuthService.login(
-        session=session, email=form_data.username, password=form_data.password
+        session=session, email=form_data.username, password=form_data.password, request=request
     )
 
 

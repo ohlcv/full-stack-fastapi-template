@@ -12,6 +12,7 @@ from app.admin import setup_admin
 from app.api.main import api_router
 from app.core.cache import init_cache
 from app.core.config import settings
+from app.core.i18n import get_i18n
 from app.core.permissions import setup_permissions
 from app.core.rate_limit import limiter
 
@@ -25,6 +26,9 @@ async def lifespan(app: FastAPI):
     """Lifespan context manager for startup and shutdown events."""
     # Startup
     await init_cache()
+    # Initialize i18n
+    if settings.I18N_ENABLED:
+        get_i18n()  # Initialize translations
     yield
     # Shutdown (if needed)
 

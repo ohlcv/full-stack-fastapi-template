@@ -22,9 +22,15 @@ def _is_development() -> bool:
 
 async def http_exception_handler(request: Request, exc: StarletteHTTPException) -> JSONResponse:
     """Handle HTTP exceptions."""
+    from app.core.i18n import get_locale, translate
+
+    # Translate error message if i18n is enabled
+    locale = get_locale(request)
+    translated_message = translate(str(exc.detail), locale)
+
     content = {
         "error": True,
-        "message": exc.detail,
+        "message": translated_message,
         "status_code": exc.status_code,
     }
     
@@ -41,12 +47,17 @@ async def validation_exception_handler(
     request: Request, exc: RequestValidationError
 ) -> JSONResponse:
     """Handle request validation errors."""
+    from app.core.i18n import get_locale, translate
+
     errors = exc.errors()
+    locale = get_locale(request)
+    translated_message = translate("Validation error", locale)
+
     return JSONResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         content={
             "error": True,
-            "message": "Validation error",
+            "message": translated_message,
             "details": errors,
             "status_code": status.HTTP_422_UNPROCESSABLE_ENTITY,
         },
@@ -55,11 +66,16 @@ async def validation_exception_handler(
 
 async def integrity_error_handler(request: Request, exc: IntegrityError) -> JSONResponse:
     """Handle database integrity errors."""
+    from app.core.i18n import get_locale, translate
+
     logger.error(f"Database integrity error: {exc}", exc_info=True)
+    
+    locale = get_locale(request)
+    translated_message = translate("Database integrity error", locale)
     
     content = {
         "error": True,
-        "message": "Database integrity error",
+        "message": translated_message,
         "status_code": status.HTTP_409_CONFLICT,
     }
     
@@ -75,11 +91,16 @@ async def integrity_error_handler(request: Request, exc: IntegrityError) -> JSON
 
 async def general_exception_handler(request: Request, exc: Exception) -> JSONResponse:
     """Handle general exceptions."""
+    from app.core.i18n import get_locale, translate
+
     logger.exception(f"Unhandled exception: {exc}", exc_info=True)
+    
+    locale = get_locale(request)
+    translated_message = translate("Internal server error", locale)
     
     content = {
         "error": True,
-        "message": "Internal server error",
+        "message": translated_message,
         "status_code": status.HTTP_500_INTERNAL_SERVER_ERROR,
     }
     

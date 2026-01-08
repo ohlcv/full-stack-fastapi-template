@@ -20,17 +20,27 @@ class AuthService:
     """Service layer for authentication-related business logic."""
 
     @staticmethod
-    def login(*, session: Session, email: str, password: str) -> Token:
+    def login(*, session: Session, email: str, password: str, request: Request | None = None) -> Token:
         """Authenticate user and return access token."""
         user = crud.authenticate(session=session, email=email, password=password)
         if not user:
+            detail = "Incorrect email or password"
+            if request:
+                from app.core.i18n import get_locale, translate
+                locale = get_locale(request)
+                detail = translate(detail, locale)
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, detail="Incorrect email or password"
+                status_code=status.HTTP_400_BAD_REQUEST, detail=detail
             )
 
         if not user.is_active:
+            detail = "Inactive user"
+            if request:
+                from app.core.i18n import get_locale, translate
+                locale = get_locale(request)
+                detail = translate(detail, locale)
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, detail="Inactive user"
+                status_code=status.HTTP_400_BAD_REQUEST, detail=detail
             )
 
         access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
