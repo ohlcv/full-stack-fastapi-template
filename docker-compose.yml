@@ -1,3 +1,5 @@
+name: meow-full-stack-frame
+
 services:
 
   db:
@@ -32,7 +34,14 @@ services:
       - app-redis-data:/data
     ports:
       - "6379:6379"
-    command: redis-server --appendonly yes ${REDIS_PASSWORD:+--requirepass $REDIS_PASSWORD}
+    command: >
+      sh -c "
+      if [ -n \"$$REDIS_PASSWORD\" ]; then
+        redis-server --appendonly yes --requirepass \"$$REDIS_PASSWORD\"
+      else
+        redis-server --appendonly yes
+      fi
+      "
     env_file:
       - .env
     environment:
