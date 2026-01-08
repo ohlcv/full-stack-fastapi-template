@@ -94,6 +94,33 @@ class Settings(BaseSettings):
     FIRST_SUPERUSER: EmailStr
     FIRST_SUPERUSER_PASSWORD: str
 
+    # Redis configuration
+    REDIS_HOST: str = "localhost"
+    REDIS_PORT: int = 6379
+    REDIS_DB: int = 0
+    REDIS_PASSWORD: str | None = None
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def REDIS_URL(self) -> str:
+        """Get Redis connection URL."""
+        if self.REDIS_PASSWORD:
+            return f"redis://:{self.REDIS_PASSWORD}@{self.REDIS_HOST}:{self.REDIS_PORT}/{self.REDIS_DB}"
+        return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/{self.REDIS_DB}"
+
+    # Cache configuration
+    CACHE_EXPIRE_SECONDS: int = 300  # 5 minutes default
+    CACHE_KEY_PREFIX: str = "app:cache:"
+
+    # ARQ configuration
+    ARQ_REDIS_URL: str | None = None  # If None, uses REDIS_URL
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def ARQ_REDIS_CONNECTION(self) -> str:
+        """Get ARQ Redis connection URL."""
+        return self.ARQ_REDIS_URL or self.REDIS_URL
+
     def _check_default_secret(self, var_name: str, value: str | None) -> None:
         if value == "changethis":
             message = (

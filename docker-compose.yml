@@ -19,6 +19,20 @@ services:
       - POSTGRES_USER=${POSTGRES_USER?Variable not set}
       - POSTGRES_DB=${POSTGRES_DB?Variable not set}
 
+  redis:
+    image: redis:7-alpine
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      retries: 5
+      timeout: 5s
+    volumes:
+      - app-redis-data:/data
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+
   adminer:
     image: adminer
     restart: always
@@ -85,6 +99,9 @@ services:
       db:
         condition: service_healthy
         restart: true
+      redis:
+        condition: service_healthy
+        restart: true
       prestart:
         condition: service_completed_successfully
     env_file:
@@ -106,6 +123,8 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER?Variable not set}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
       - SENTRY_DSN=${SENTRY_DSN}
 
     healthcheck:
@@ -164,6 +183,7 @@ services:
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.middlewares=https-redirect
 volumes:
   app-db-data:
+  app-redis-data:
 
 networks:
   traefik-public:
