@@ -6,6 +6,7 @@ from pydantic import EmailStr
 from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
+    from app.models.file import File
     from app.models.item import Item
 
 
@@ -63,6 +64,7 @@ class User(SQLAlchemyBaseUserTableUUID, UserBase, table=True):
     
     full_name: str | None = Field(default=None, max_length=255)
     items: list["Item"] = Relationship(back_populates="owner", cascade_delete=True)
+    files: list["File"] = Relationship(back_populates="owner", cascade_delete=True)
 
 
 # Properties to return via API, id is always required

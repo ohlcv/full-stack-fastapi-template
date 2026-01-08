@@ -10,6 +10,12 @@ from app.models.item import (
     ItemsPublic,
     ItemUpdate,
 )
+from app.models.file import (
+    File,
+    FileCreate,
+    FilePublic,
+    FilesPublic,
+)
 from app.models.user import (
     UpdatePassword,
     User,
@@ -42,6 +48,11 @@ __all__ = [
     "ItemUpdate",
     "ItemPublic",
     "ItemsPublic",
+    # File models
+    "File",
+    "FileCreate",
+    "FilePublic",
+    "FilesPublic",
     # Common models
     "Message",
     "Token",

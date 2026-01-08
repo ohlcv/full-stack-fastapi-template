@@ -1,3 +1,9 @@
+from app.crud.file import (
+    create_file,
+    delete_file,
+    get_file,
+    get_files,
+)
 from app.crud.item import (
     create_item,
     delete_item,
@@ -32,5 +38,10 @@ __all__ = [
     "get_items",
     "update_item",
     "delete_item",
+    # File CRUD
+    "create_file",
+    "get_file",
+    "get_files",
+    "delete_file",
 ]
 

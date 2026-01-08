@@ -143,6 +143,19 @@ class Settings(BaseSettings):
     I18N_SUPPORTED_LOCALES: list[str] = ["zh_CN", "en_US"]  # Supported locales
     I18N_LOCALE_DIR: str = "app/locales"  # Translation files directory
 
+    # File upload configuration
+    UPLOAD_DIR: str = "uploads"  # Base directory for file uploads
+    MAX_UPLOAD_SIZE: int = 10 * 1024 * 1024  # 10 MB default
+    ALLOWED_EXTENSIONS: list[str] = [
+        ".jpg", ".jpeg", ".png", ".gif", ".pdf", ".doc", ".docx", ".txt"
+    ]  # Allowed file extensions
+    ALLOWED_MIME_TYPES: list[str] = [
+        "image/jpeg", "image/png", "image/gif",
+        "application/pdf", "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "text/plain",
+    ]  # Allowed MIME types
+
     def _check_default_secret(self, var_name: str, value: str | None) -> None:
         if value == "changethis":
             message = (
