@@ -121,6 +121,22 @@ class Settings(BaseSettings):
         """Get ARQ Redis connection URL."""
         return self.ARQ_REDIS_URL or self.REDIS_URL
 
+    # Rate limiting configuration
+    RATE_LIMIT_ENABLED: bool = True
+    RATE_LIMIT_STORAGE_URI: str | None = None  # If None, uses REDIS_URL
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def RATE_LIMIT_STORAGE(self) -> str:
+        """Get rate limiting storage URL."""
+        return self.RATE_LIMIT_STORAGE_URI or self.REDIS_URL
+
+    # Default rate limits (requests per time period)
+    RATE_LIMIT_DEFAULT: str = "100/minute"  # Default: 100 requests per minute
+    RATE_LIMIT_LOGIN: str = "5/minute"  # Login: 5 requests per minute
+    RATE_LIMIT_REGISTER: str = "3/minute"  # Register: 3 requests per minute
+    RATE_LIMIT_PASSWORD_RESET: str = "3/hour"  # Password reset: 3 requests per hour
+
     def _check_default_secret(self, var_name: str, value: str | None) -> None:
         if value == "changethis":
             message = (

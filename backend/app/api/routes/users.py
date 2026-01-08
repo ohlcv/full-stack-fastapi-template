@@ -1,13 +1,14 @@
 import uuid
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 
 from app.api.deps import (
     CurrentUser,
     SessionDep,
     get_current_active_superuser,
 )
+from app.core.rate_limit import limiter
 from app.models import (
     Message,
     UpdatePassword,
@@ -91,7 +92,10 @@ def delete_user_me(session: SessionDep, current_user: CurrentUser) -> Any:
 
 
 @router.post("/signup", response_model=UserPublic)
-def register_user(session: SessionDep, user_in: UserRegister) -> Any:
+@limiter.limit("3/minute")
+def register_user(
+    request: Request, session: SessionDep, user_in: UserRegister
+) -> Any:
     """
     Create new user without the need to be logged in.
     """

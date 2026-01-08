@@ -2,6 +2,9 @@ import sentry_sdk
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.routing import APIRoute
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
 from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 
@@ -10,6 +13,7 @@ from app.api.main import api_router
 from app.core.cache import init_cache
 from app.core.config import settings
 from app.core.permissions import setup_permissions
+from app.core.rate_limit import limiter
 
 
 def custom_generate_unique_id(route: APIRoute) -> str:
@@ -34,6 +38,12 @@ app = FastAPI(
     generate_unique_id_function=custom_generate_unique_id,
     lifespan=lifespan,
 )
+
+# Add rate limiting
+if settings.RATE_LIMIT_ENABLED:
+    app.state.limiter = limiter
+    app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+    app.add_middleware(SlowAPIMiddleware)
 
 # Add session middleware for admin authentication
 app.add_middleware(SessionMiddleware, secret_key=settings.SECRET_KEY)
