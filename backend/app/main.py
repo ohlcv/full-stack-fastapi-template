@@ -2,9 +2,12 @@ import sentry_sdk
 from fastapi import FastAPI
 from fastapi.routing import APIRoute
 from starlette.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
 
+from app.admin import setup_admin
 from app.api.main import api_router
 from app.core.config import settings
+from app.core.permissions import setup_permissions
 
 
 def custom_generate_unique_id(route: APIRoute) -> str:
@@ -20,6 +23,9 @@ app = FastAPI(
     generate_unique_id_function=custom_generate_unique_id,
 )
 
+# Add session middleware for admin authentication
+app.add_middleware(SessionMiddleware, secret_key=settings.SECRET_KEY)
+
 # Set all CORS enabled origins
 if settings.all_cors_origins:
     app.add_middleware(
@@ -31,3 +37,9 @@ if settings.all_cors_origins:
     )
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
+
+# Setup permissions system
+setup_permissions()
+
+# Setup admin interface
+setup_admin(app)
