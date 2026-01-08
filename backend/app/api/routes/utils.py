@@ -28,4 +28,8 @@ def test_email(email_to: EmailStr) -> Message:
 
 @router.get("/health-check/")
 async def health_check() -> bool:
+    """
+    Health check endpoint.
+    This endpoint is excluded from rate limiting as it's used for monitoring.
+    """
     return True

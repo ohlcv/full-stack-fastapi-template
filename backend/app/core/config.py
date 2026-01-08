@@ -163,7 +163,12 @@ class Settings(BaseSettings):
                 "for security, please change it, at least for deployments."
             )
             if self.ENVIRONMENT == "local":
-                warnings.warn(message, stacklevel=1)
+                # Use UserWarning with stacklevel to show the actual config location
+                warnings.warn(
+                    message,
+                    category=UserWarning,
+                    stacklevel=2,  # Skip this method and the validator
+                )
             else:
                 raise ValueError(message)
 

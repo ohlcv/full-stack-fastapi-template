@@ -1,3 +1,4 @@
+import warnings
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
@@ -6,7 +7,15 @@ from passlib.context import CryptContext
 
 from app.core.config import settings
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# Suppress bcrypt version warning from passlib
+# This is a known issue: passlib tries to read bcrypt.__about__.__version__
+# but bcrypt 4.3.0 doesn't have this attribute. It doesn't affect functionality.
+# We suppress warnings when creating CryptContext
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore", message=".*bcrypt.*__about__.*")
+    warnings.filterwarnings("ignore", message=".*error reading bcrypt version.*")
+    warnings.filterwarnings("ignore", message=".*trapped.*error reading bcrypt version.*")
+    pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 ALGORITHM = "HS256"
