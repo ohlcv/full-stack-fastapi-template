@@ -1,0 +1,41 @@
+{
+  "title": "Items Management",
+  "description": "Manage your items and content",
+  "addItem": "Add Item",
+  "editItem": "Edit Item",
+  "deleteItem": "Delete Item",
+  "noItems": "No items",
+  "noItemsDescription": "Click the button above to create your first item",
+  "fields": {
+    "title": "Title",
+    "titlePlaceholder": "Enter item title",
+    "description": "Description",
+    "descriptionPlaceholder": "Enter item description (optional)",
+    "owner": "Owner",
+    "createdAt": "Created At",
+    "updatedAt": "Updated At"
+  },
+  "actions": {
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "messages": {
+    "createSuccess": "Item created successfully",
+    "createFailed": "Failed to create item",
+    "updateSuccess": "Item updated successfully",
+    "updateFailed": "Failed to update item",
+    "deleteSuccess": "Item deleted successfully",
+    "deleteFailed": "Failed to delete item",
+    "deleteConfirm": "Are you sure you want to delete \"{{title}}\"?",
+    "deleteWarning": "This action cannot be undone."
+  },
+  "table": {
+    "id": "ID",
+    "title": "Title",
+    "description": "Description",
+    "owner": "Owner",
+    "actions": "Actions",
+    "noDescription": "No description"
+  }
+}

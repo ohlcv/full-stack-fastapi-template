@@ -1,0 +1,15 @@
+{
+  "title": "仪表盘",
+  "welcome": "欢迎回来",
+  "welcomeMessage": "您好，{{name}}！",
+  "overview": "概览",
+  "statistics": "统计数据",
+  "recentActivity": "最近活动",
+  "quickActions": "快捷操作",
+  "navigation": {
+    "dashboard": "仪表盘",
+    "items": "项目管理",
+    "admin": "管理后台",
+    "settings": "设置"
+  }
+}

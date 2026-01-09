@@ -1,0 +1,43 @@
+{
+  "required": "此字段为必填项",
+  "email": {
+    "invalid": "请输入有效的邮箱地址",
+    "required": "请输入邮箱地址"
+  },
+  "password": {
+    "required": "请输入密码",
+    "minLength": "密码至少需要 {{min}} 个字符",
+    "maxLength": "密码不能超过 {{max}} 个字符",
+    "weak": "密码强度太弱",
+    "mismatch": "两次输入的密码不一致",
+    "uppercase": "密码需要包含大写字母",
+    "lowercase": "密码需要包含小写字母",
+    "number": "密码需要包含数字",
+    "special": "密码需要包含特殊字符"
+  },
+  "name": {
+    "required": "请输入姓名",
+    "minLength": "姓名至少需要 {{min}} 个字符",
+    "maxLength": "姓名不能超过 {{max}} 个字符"
+  },
+  "title": {
+    "required": "请输入标题",
+    "minLength": "标题至少需要 {{min}} 个字符",
+    "maxLength": "标题不能超过 {{max}} 个字符"
+  },
+  "string": {
+    "minLength": "至少需要 {{min}} 个字符",
+    "maxLength": "不能超过 {{max}} 个字符"
+  },
+  "number": {
+    "min": "不能小于 {{min}}",
+    "max": "不能大于 {{max}}",
+    "integer": "请输入整数",
+    "positive": "请输入正数"
+  },
+  "file": {
+    "required": "请选择文件",
+    "tooLarge": "文件大小不能超过 {{max}}",
+    "invalidType": "不支持的文件类型"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "title": "项目管理",
+  "description": "管理您的项目和内容",
+  "addItem": "添加项目",
+  "editItem": "编辑项目",
+  "deleteItem": "删除项目",
+  "noItems": "暂无项目",
+  "noItemsDescription": "点击上方按钮创建您的第一个项目",
+  "fields": {
+    "title": "标题",
+    "titlePlaceholder": "请输入项目标题",
+    "description": "描述",
+    "descriptionPlaceholder": "请输入项目描述（可选）",
+    "owner": "所有者",
+    "createdAt": "创建时间",
+    "updatedAt": "更新时间"
+  },
+  "actions": {
+    "view": "查看",
+    "edit": "编辑",
+    "delete": "删除"
+  },
+  "messages": {
+    "createSuccess": "项目创建成功",
+    "createFailed": "项目创建失败",
+    "updateSuccess": "项目更新成功",
+    "updateFailed": "项目更新失败",
+    "deleteSuccess": "项目删除成功",
+    "deleteFailed": "项目删除失败",
+    "deleteConfirm": "确定要删除项目 \"{{title}}\" 吗？",
+    "deleteWarning": "此操作无法撤销。"
+  },
+  "table": {
+    "id": "ID",
+    "title": "标题",
+    "description": "描述",
+    "owner": "所有者",
+    "actions": "操作",
+    "noDescription": "无描述"
+  }
+}

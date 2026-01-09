@@ -1,0 +1,57 @@
+{
+  "title": "Settings",
+  "description": "Manage your account settings",
+  "tabs": {
+    "profile": "Profile",
+    "password": "Change Password",
+    "appearance": "Appearance",
+    "danger": "Danger Zone"
+  },
+  "profile": {
+    "title": "Profile",
+    "description": "Update your personal information",
+    "fullName": "Full Name",
+    "fullNamePlaceholder": "Enter your full name",
+    "email": "Email",
+    "emailDescription": "Email address cannot be changed",
+    "save": "Save Changes",
+    "success": "Profile updated successfully",
+    "failed": "Failed to update profile"
+  },
+  "password": {
+    "title": "Change Password",
+    "description": "Keep your account secure",
+    "currentPassword": "Current Password",
+    "currentPasswordPlaceholder": "Enter current password",
+    "newPassword": "New Password",
+    "newPasswordPlaceholder": "Enter new password",
+    "confirmPassword": "Confirm New Password",
+    "confirmPasswordPlaceholder": "Enter new password again",
+    "submit": "Change Password",
+    "success": "Password changed successfully",
+    "failed": "Failed to change password",
+    "incorrectPassword": "Current password is incorrect"
+  },
+  "appearance": {
+    "title": "Appearance",
+    "description": "Customize interface appearance",
+    "theme": "Theme",
+    "themeDescription": "Choose your preferred theme mode",
+    "language": "Language",
+    "languageDescription": "Choose interface language"
+  },
+  "danger": {
+    "title": "Danger Zone",
+    "description": "Irreversible actions",
+    "deleteAccount": {
+      "title": "Delete Account",
+      "description": "Permanently delete your account and all associated data",
+      "button": "Delete My Account",
+      "confirm": "Confirm Account Deletion",
+      "confirmDescription": "This action cannot be undone. All your data will be permanently deleted.",
+      "typeToConfirm": "Type \"DELETE\" to confirm",
+      "success": "Account deleted",
+      "failed": "Failed to delete account"
+    }
+  }
+}

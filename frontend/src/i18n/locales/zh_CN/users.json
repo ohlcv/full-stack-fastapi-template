@@ -1,0 +1,61 @@
+{
+  "title": "用户管理",
+  "description": "管理系统用户",
+  "addUser": "添加用户",
+  "editUser": "编辑用户",
+  "deleteUser": "删除用户",
+  "noUsers": "暂无用户",
+  "fields": {
+    "email": "邮箱",
+    "emailPlaceholder": "user@example.com",
+    "fullName": "姓名",
+    "fullNamePlaceholder": "请输入用户姓名",
+    "password": "密码",
+    "passwordPlaceholder": "请输入密码",
+    "confirmPassword": "确认密码",
+    "confirmPasswordPlaceholder": "请再次输入密码",
+    "role": "角色",
+    "status": "状态",
+    "isActive": "是否激活",
+    "isSuperuser": "超级管理员",
+    "createdAt": "创建时间",
+    "lastLogin": "最后登录"
+  },
+  "roles": {
+    "admin": "管理员",
+    "user": "普通用户",
+    "superuser": "超级管理员"
+  },
+  "status": {
+    "active": "已激活",
+    "inactive": "未激活",
+    "pending": "待验证"
+  },
+  "actions": {
+    "view": "查看",
+    "edit": "编辑",
+    "delete": "删除",
+    "activate": "激活",
+    "deactivate": "停用",
+    "resetPassword": "重置密码"
+  },
+  "messages": {
+    "createSuccess": "用户创建成功",
+    "createFailed": "用户创建失败",
+    "updateSuccess": "用户更新成功",
+    "updateFailed": "用户更新失败",
+    "deleteSuccess": "用户删除成功",
+    "deleteFailed": "用户删除失败",
+    "deleteConfirm": "确定要删除用户 \"{{email}}\" 吗？",
+    "deleteWarning": "此操作无法撤销。",
+    "cannotDeleteSelf": "不能删除自己的账户",
+    "cannotDeleteSuperuser": "不能删除超级管理员"
+  },
+  "table": {
+    "email": "邮箱",
+    "fullName": "姓名",
+    "status": "状态",
+    "role": "角色",
+    "actions": "操作"
+  }
+}

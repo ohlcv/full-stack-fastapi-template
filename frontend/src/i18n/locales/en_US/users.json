@@ -1,0 +1,61 @@
+{
+  "title": "User Management",
+  "description": "Manage system users",
+  "addUser": "Add User",
+  "editUser": "Edit User",
+  "deleteUser": "Delete User",
+  "noUsers": "No users",
+  "fields": {
+    "email": "Email",
+    "emailPlaceholder": "user@example.com",
+    "fullName": "Full Name",
+    "fullNamePlaceholder": "Enter user's full name",
+    "password": "Password",
+    "passwordPlaceholder": "Enter password",
+    "confirmPassword": "Confirm Password",
+    "confirmPasswordPlaceholder": "Enter password again",
+    "role": "Role",
+    "status": "Status",
+    "isActive": "Active",
+    "isSuperuser": "Superuser",
+    "createdAt": "Created At",
+    "lastLogin": "Last Login"
+  },
+  "roles": {
+    "admin": "Admin",
+    "user": "User",
+    "superuser": "Superuser"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "pending": "Pending"
+  },
+  "actions": {
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "resetPassword": "Reset Password"
+  },
+  "messages": {
+    "createSuccess": "User created successfully",
+    "createFailed": "Failed to create user",
+    "updateSuccess": "User updated successfully",
+    "updateFailed": "Failed to update user",
+    "deleteSuccess": "User deleted successfully",
+    "deleteFailed": "Failed to delete user",
+    "deleteConfirm": "Are you sure you want to delete user \"{{email}}\"?",
+    "deleteWarning": "This action cannot be undone.",
+    "cannotDeleteSelf": "Cannot delete your own account",
+    "cannotDeleteSuperuser": "Cannot delete superuser"
+  },
+  "table": {
+    "email": "Email",
+    "fullName": "Full Name",
+    "status": "Status",
+    "role": "Role",
+    "actions": "Actions"
+  }
+}

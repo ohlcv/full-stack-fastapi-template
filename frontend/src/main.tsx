@@ -13,9 +13,20 @@ import { Toaster } from "./components/ui/sonner"
 import "./index.css"
 import { routeTree } from "./routeTree.gen"
 
+// Initialize i18n
+import "./i18n"
+import i18n from "./i18n"
+
 OpenAPI.BASE = import.meta.env.VITE_API_URL
 OpenAPI.TOKEN = async () => {
   return localStorage.getItem("access_token") || ""
+}
+
+// Set Accept-Language header for API requests
+OpenAPI.HEADERS = async () => {
+  return {
+    "Accept-Language": i18n.language,
+  }
 }
 
 const handleApiError = (error: Error) => {

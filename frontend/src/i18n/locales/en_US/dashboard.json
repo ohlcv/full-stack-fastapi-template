@@ -1,0 +1,15 @@
+{
+  "title": "Dashboard",
+  "welcome": "Welcome back",
+  "welcomeMessage": "Hello, {{name}}!",
+  "overview": "Overview",
+  "statistics": "Statistics",
+  "recentActivity": "Recent Activity",
+  "quickActions": "Quick Actions",
+  "navigation": {
+    "dashboard": "Dashboard",
+    "items": "Items",
+    "admin": "Admin",
+    "settings": "Settings"
+  }
+}

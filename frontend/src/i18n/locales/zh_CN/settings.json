@@ -1,0 +1,57 @@
+{
+  "title": "设置",
+  "description": "管理您的账户设置",
+  "tabs": {
+    "profile": "个人资料",
+    "password": "修改密码",
+    "appearance": "外观",
+    "danger": "危险区域"
+  },
+  "profile": {
+    "title": "个人资料",
+    "description": "更新您的个人信息",
+    "fullName": "姓名",
+    "fullNamePlaceholder": "请输入您的姓名",
+    "email": "邮箱",
+    "emailDescription": "邮箱地址不可修改",
+    "save": "保存更改",
+    "success": "个人资料已更新",
+    "failed": "更新失败"
+  },
+  "password": {
+    "title": "修改密码",
+    "description": "确保您的账户安全",
+    "currentPassword": "当前密码",
+    "currentPasswordPlaceholder": "请输入当前密码",
+    "newPassword": "新密码",
+    "newPasswordPlaceholder": "请输入新密码",
+    "confirmPassword": "确认新密码",
+    "confirmPasswordPlaceholder": "请再次输入新密码",
+    "submit": "修改密码",
+    "success": "密码已修改",
+    "failed": "修改失败",
+    "incorrectPassword": "当前密码不正确"
+  },
+  "appearance": {
+    "title": "外观设置",
+    "description": "自定义界面外观",
+    "theme": "主题",
+    "themeDescription": "选择您喜欢的主题模式",
+    "language": "语言",
+    "languageDescription": "选择界面显示语言"
+  },
+  "danger": {
+    "title": "危险区域",
+    "description": "不可逆的操作",
+    "deleteAccount": {
+      "title": "删除账户",
+      "description": "永久删除您的账户和所有相关数据",
+      "button": "删除我的账户",
+      "confirm": "确认删除账户",
+      "confirmDescription": "此操作不可撤销。您的所有数据将被永久删除。",
+      "typeToConfirm": "请输入 \"DELETE\" 确认删除",
+      "success": "账户已删除",
+      "failed": "删除失败"
+    }
+  }
+}

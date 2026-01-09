@@ -2,11 +2,12 @@ import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 import { Search } from "lucide-react"
 import { Suspense } from "react"
+import { useTranslation } from "react-i18next"
 
 import { ItemsService } from "@/client"
 import { DataTable } from "@/components/Common/DataTable"
 import AddItem from "@/components/Items/AddItem"
-import { columns } from "@/components/Items/columns"
+import { useItemColumns } from "@/components/Items/columns"
 import PendingItems from "@/components/Pending/PendingItems"
 
 function getItemsQueryOptions() {
@@ -28,7 +29,9 @@ export const Route = createFileRoute("/_layout/items")({
 })
 
 function ItemsTableContent() {
+  const { t } = useTranslation("items")
   const { data: items } = useSuspenseQuery(getItemsQueryOptions())
+  const columns = useItemColumns()
 
   if (items.data.length === 0) {
     return (
@@ -36,8 +39,8 @@ function ItemsTableContent() {
         <div className="rounded-full bg-muted p-4 mb-4">
           <Search className="h-8 w-8 text-muted-foreground" />
         </div>
-        <h3 className="text-lg font-semibold">You don't have any items yet</h3>
-        <p className="text-muted-foreground">Add a new item to get started</p>
+        <h3 className="text-lg font-semibold">{t("noItems")}</h3>
+        <p className="text-muted-foreground">{t("noItemsDescription")}</p>
       </div>
     )
   }
@@ -54,12 +57,14 @@ function ItemsTable() {
 }
 
 function Items() {
+  const { t } = useTranslation("items")
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Items</h1>
-          <p className="text-muted-foreground">Create and manage your items</p>
+          <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+          <p className="text-muted-foreground">{t("description")}</p>
         </div>
         <AddItem />
       </div>
