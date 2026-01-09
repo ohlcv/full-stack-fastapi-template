@@ -107,6 +107,10 @@ services:
     restart: "no"
     ports:
       - "6379:6379"
+    # Override command to disable password in local development
+    command: redis-server --appendonly yes
+    environment:
+      - REDIS_PASSWORD=
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
@@ -145,15 +149,15 @@ services:
       - "1080:1080"
       - "1025:1025"
 
-  # frontend:
-  #   restart: "no"
-  #   ports:
-  #     - "5173:80"
-  #   build:
-  #     context: ./frontend
-  #     args:
-  #       - VITE_API_URL=http://localhost:8000
-  #       - NODE_ENV=development
+  frontend:
+    restart: "no"
+    ports:
+      - "5173:80"
+    build:
+      context: ./frontend
+      args:
+        - VITE_API_URL=http://localhost:8000
+        - NODE_ENV=development
 
   playwright:
     build:

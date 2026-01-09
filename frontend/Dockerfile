@@ -9,7 +9,11 @@ RUN npm install
 
 COPY ./ /app/
 
-ARG VITE_API_URL=${VITE_API_URL}
+ARG VITE_API_URL
+ENV VITE_API_URL=${VITE_API_URL}
+
+# Debug: Print the VITE_API_URL value during build
+RUN echo "VITE_API_URL is set to: $VITE_API_URL"
 
 RUN npm run build
 
