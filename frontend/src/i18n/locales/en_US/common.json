@@ -70,5 +70,30 @@
     "label": "Language",
     "zh_CN": "简体中文",
     "en_US": "English"
+  },
+  "userMenu": {
+    "settings": "User Settings",
+    "logout": "Log Out"
+  },
+  "notFound": {
+    "oops": "Oops!",
+    "message": "The page you are looking for was not found.",
+    "goBack": "Go Back"
+  },
+  "errorPage": {
+    "title": "Error",
+    "oops": "Oops!",
+    "message": "Something went wrong. Please try again.",
+    "goHome": "Go Home"
+  },
+  "table": {
+    "noResults": "No results found.",
+    "showing": "Showing {{from}} to {{to}} of {{total}} entries",
+    "rowsPerPage": "Rows per page",
+    "pageOf": "Page {{current}} of {{total}}",
+    "goToFirst": "Go to first page",
+    "goToPrevious": "Go to previous page",
+    "goToNext": "Go to next page",
+    "goToLast": "Go to last page"
   }
 }

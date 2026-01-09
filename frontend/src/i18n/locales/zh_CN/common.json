@@ -70,5 +70,30 @@
     "label": "语言",
     "zh_CN": "简体中文",
     "en_US": "English"
+  },
+  "userMenu": {
+    "settings": "用户设置",
+    "logout": "退出登录"
+  },
+  "notFound": {
+    "oops": "哎呀！",
+    "message": "您访问的页面不存在。",
+    "goBack": "返回首页"
+  },
+  "errorPage": {
+    "title": "错误",
+    "oops": "哎呀！",
+    "message": "出了点问题，请稍后重试。",
+    "goHome": "返回首页"
+  },
+  "table": {
+    "noResults": "未找到结果",
+    "showing": "显示第 {{from}} 至 {{to}} 条，共 {{total}} 条",
+    "rowsPerPage": "每页行数",
+    "pageOf": "第 {{current}} / {{total}} 页",
+    "goToFirst": "跳转到第一页",
+    "goToPrevious": "跳转到上一页",
+    "goToNext": "跳转到下一页",
+    "goToLast": "跳转到最后一页"
   }
 }
